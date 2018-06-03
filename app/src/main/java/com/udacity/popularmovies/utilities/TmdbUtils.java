@@ -81,8 +81,9 @@ public class TmdbUtils {
     }
 
     /**
-     * Builds the URL used for The Movie Database movie poster images.
+     * Builds the URL used for The Movie Database images.
      *
+     * @param imageWidth the desired width of the image (w92, w154, w185, w342, w500 or w780)
      * @param imageName the name of the image as a String (with leading "/").
      * @return The URL used to query the The Movie Database.
      */

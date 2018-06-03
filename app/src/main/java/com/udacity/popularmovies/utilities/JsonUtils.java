@@ -8,6 +8,12 @@ import org.json.JSONObject;
 
 public class JsonUtils {
 
+    /**
+     * Parses JSON received from The Move Database API https://themoviedb.org
+     *
+     * @param json The json string to be parsed
+     * @return An array of Movie objects.
+     */
     public static Movie[] parseTmdbJson(String json) {
 
         final String KEY_RESULTS = "results";

@@ -7,7 +7,7 @@ import com.udacity.popularmovies.utilities.TmdbUtils;
 
 public class Movie implements Parcelable {
 
-    // The desired image width (w92, w154, w185, w342, w500 or w780).
+    // Set the desired image widths here (w92, w154, w185, w342, w500 or w780).
     private final static String POSTER_WIDTH = "w342";
     private final static String BACKDROP_WIDTH = "w500";
 
