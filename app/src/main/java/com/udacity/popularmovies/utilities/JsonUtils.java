@@ -17,6 +17,7 @@ public class JsonUtils {
         final String KEY_OVERVIEW = "overview";
         final String KEY_VOTE_AVERAGE = "vote_average";
         final String KEY_RELEASE_DATE = "release_date";
+        final String KEY_BACKDROP_PATH = "backdrop_path";
 
         Movie[] movies = null;
 
@@ -37,6 +38,7 @@ public class JsonUtils {
                 movie.setOverview(movieJson.getString(KEY_OVERVIEW));
                 movie.setReleaseDate(movieJson.getString(KEY_RELEASE_DATE));
                 movie.setVoteAverage(movieJson.getDouble(KEY_VOTE_AVERAGE));
+                movie.setBackdropPath(movieJson.getString(KEY_BACKDROP_PATH));
 
                 movies[i] = movie;
             }

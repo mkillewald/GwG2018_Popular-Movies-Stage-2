@@ -29,7 +29,6 @@ import java.util.Scanner;
  */
 public class TmdbUtils {
 
-
     // 1. Create an account, if needed. https://www.themoviedb.org/account/signup
     // 2. Generate an API key. https://www.themoviedb.org/settings/api
     // 3. Copy and paste your API key (v3 auth) below.
@@ -40,9 +39,6 @@ public class TmdbUtils {
     private final static String POPULAR = "popular";
     private final static String TOP_RATED = "top_rated";
     private final static String PARAM_API_KEY = "api_key";
-
-    // The desired image width (w92, w154, w185, w342, w500 or w780).
-    private final static String IMAGE_WIDTH = "w342";
 
     /**
      * Builds the URL used to query The Movie Database.
@@ -90,9 +86,9 @@ public class TmdbUtils {
      * @param imageName the name of the image as a String (with leading "/").
      * @return The URL used to query the The Movie Database.
      */
-    public static URL buildImageUrl(String imageName) {
+    public static URL buildImageUrl(String imageWidth, String imageName) {
         Uri builtUri = Uri.parse(IMAGE_URL).buildUpon()
-                .appendEncodedPath(IMAGE_WIDTH + imageName)
+                .appendEncodedPath(imageWidth + imageName)
                 .build();
 
         URL url = null;

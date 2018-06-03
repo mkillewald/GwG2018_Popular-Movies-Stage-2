@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="error_message">An error has occurred.</string>
+
+    <!-- Main Activity-->
+    <string name="main_error_message">An error has occurred.</string>
+
+    <!-- Detail Activity-->
+    <string name="detail_error_message">Movie data not available</string>
+    <string name="detail_original_title">Original Title: </string>
+    <string name="detail_overview">Plot: </string>
+    <string name="detail_vote_average">User Rating: </string>
+    <string name="detail_release_date">Release Date: </string>
 </resources>

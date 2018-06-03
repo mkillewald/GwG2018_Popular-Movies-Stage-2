@@ -60,7 +60,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         Movie movie = mMovies[position];
 
         Picasso.with(holder.itemView.getContext())
-                .load(movie.getImageUrl())
+                .load(movie.getPosterUrl())
+                .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.mMovieImageView);
     }
 

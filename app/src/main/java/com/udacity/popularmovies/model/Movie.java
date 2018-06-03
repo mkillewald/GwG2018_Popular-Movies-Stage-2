@@ -7,24 +7,19 @@ import com.udacity.popularmovies.utilities.TmdbUtils;
 
 public class Movie implements Parcelable {
 
+    // The desired image width (w92, w154, w185, w342, w500 or w780).
+    private final static String POSTER_WIDTH = "w342";
+    private final static String BACKDROP_WIDTH = "w500";
+
     private String title;
     private String originalTitle;
     private String posterPath;
     private String overview;
     private Double voteAverage;
     private String releaseDate;
+    private String backdropPath;
 
     public Movie() {
-    }
-
-    public Movie(String title, String originalTitle, String posterPath, String overview,
-                 Double voteAverage, String releaseDate) {
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.posterPath = posterPath;
-        this.overview = overview;
-        this.voteAverage = voteAverage;
-        this.releaseDate = releaseDate;
     }
 
     public Movie(Parcel source) {
@@ -34,6 +29,7 @@ public class Movie implements Parcelable {
         this.overview = source.readString();
         this.voteAverage = source.readDouble();
         this.releaseDate = source.readString();
+        this.backdropPath = source.readString();
     }
 
     @Override
@@ -49,6 +45,7 @@ public class Movie implements Parcelable {
         dest.writeString(overview);
         dest.writeDouble(voteAverage);
         dest.writeString(releaseDate);
+        dest.writeString(backdropPath);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -80,13 +77,11 @@ public class Movie implements Parcelable {
         this.originalTitle = originalTitle;
     }
 
-    public String getPosterPath() {
-        return posterPath;
-    }
-
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
     }
+
+    public void setBackdropPath(String backdropPath) { this.backdropPath = backdropPath; }
 
     public String getOverview() {
         return overview;
@@ -112,8 +107,12 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public String getImageUrl() {
-        return TmdbUtils.buildImageUrl(posterPath).toString();
+    public String getPosterUrl() {
+        return TmdbUtils.buildImageUrl(POSTER_WIDTH, posterPath).toString();
+    }
+
+    public String getBackdropUrl() {
+        return TmdbUtils.buildImageUrl(BACKDROP_WIDTH, backdropPath).toString();
     }
 
 }
