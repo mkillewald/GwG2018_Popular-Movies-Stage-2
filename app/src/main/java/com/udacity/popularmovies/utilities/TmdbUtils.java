@@ -36,14 +36,13 @@ public class TmdbUtils {
     private final static String API_KEY = "";
 
     private final static String BASE_URL = "https://api.themoviedb.org/3/movie/";
+    private final static String IMAGE_URL = "https://image.tmdb.org/t/p/";
     private final static String POPULAR = "popular";
     private final static String TOP_RATED = "top_rated";
     private final static String PARAM_API_KEY = "api_key";
 
-    private final static String IMAGE_URL = "https://image.tmdb.org/t/p/";
-
     // The desired image width (w92, w154, w185, w342, w500 or w780).
-    private final static String IMAGE_WIDTH = "w500";
+    private final static String IMAGE_WIDTH = "w342";
 
     /**
      * Builds the URL used to query The Movie Database.

@@ -1,11 +1,12 @@
 package com.udacity.popularmovies;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,12 +17,12 @@ import com.udacity.popularmovies.utilities.TmdbUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements MovieAdapter.MovieAdapterOnClickHandler {
 
-    private final static int NUM_OF_COLUMNS = 2;
+    private final static int NUM_OF_COLUMNS = 3;
+    private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
@@ -69,7 +70,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(Movie movie) {
+        Context context = this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
 
+        intentToStartDetailActivity.putExtra(EXTRA_MOVIE, movie);
+        startActivity(intentToStartDetailActivity);
     }
 
     public class tmdbQueryTask extends AsyncTask<URL, Void, String> {

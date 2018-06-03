@@ -12,8 +12,6 @@ import com.udacity.popularmovies.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterImageViewHolder> {
 
-//    private static final String TAG = MovieAdapter.class.getSimpleName();
-
     private Movie[] mMovies;
 
     private final MovieAdapterOnClickHandler mClickHandler;
@@ -32,12 +30,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public MovieAdapterImageViewHolder(View itemView) {
             super(itemView);
 
-            mMovieImageView = itemView.findViewById(R.id.iv_item_movie);
+            mMovieImageView = itemView.findViewById(R.id.iv_item_movie_poster);
+            mMovieImageView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            int adapterPosition = getAdapterPosition();
+            Movie movie = mMovies[adapterPosition];
+            mClickHandler.onClick(movie);
         }
     }
 

@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class JsonUtils {
 
     public static Movie[] parseTmdbJson(String json) {
@@ -42,31 +40,6 @@ public class JsonUtils {
 
                 movies[i] = movie;
             }
-
-
-//            JSONArray alsoKnownAsArray = name.getJSONArray(KEY_ALSO_KNOWN_AS);
-//            ArrayList<String> alsoKnownAsList = new ArrayList<String>();
-//            if (alsoKnownAsArray != null) {
-//                for (int i = 0; i < alsoKnownAsArray.length(); i++) {
-//                    alsoKnownAsList.add(alsoKnownAsArray.getString(i));
-//                }
-//            }
-//
-//            JSONArray ingredientsArray = jsonObject.getJSONArray(KEY_INGREDIENTS);
-//            ArrayList<String> ingredientsList = new ArrayList<String>();
-//            if (ingredientsArray != null) {
-//                for (int i = 0; i < ingredientsArray.length(); i++) {
-//                    ingredientsList.add(ingredientsArray.getString(i));
-//                }
-//            }
-//
-//            movie.setMainName(name.getString(KEY_MAIN_NAME));
-//            movie.setAlsoKnownAs(alsoKnownAsList);
-//            movie.setPlaceOfOrigin(jsonObject.getString(KEY_PLACE_OF_ORIGIN));
-//            movie.setDescription(jsonObject.getString(KEY_DESCRIPTION));
-//            movie.setPosterPath(jsonObject.getString(KEY_IMAGE));
-//            movie.setIngredients(ingredientsList);
-
 
         } catch (JSONException e) {
             e.printStackTrace();
