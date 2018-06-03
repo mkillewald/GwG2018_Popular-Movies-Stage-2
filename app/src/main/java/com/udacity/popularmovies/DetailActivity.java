@@ -15,8 +15,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
-    private Movie mMovie;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,27 +41,27 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        mMovie = bundle.getParcelable(EXTRA_MOVIE);
+        Movie movie = bundle.getParcelable(EXTRA_MOVIE);
 
-        if (mMovie == null) {
+        if (movie == null) {
             closeOnError();
             return;
         }
 
         Picasso.with(this)
-                .load(mMovie.getPosterUrl())
+                .load(movie.getPosterUrl())
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(moviePosterImageView);
 
         Picasso.with(this)
-                .load(mMovie.getBackdropUrl())
+                .load(movie.getBackdropUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(backdropImageView);
 
-        originalTitleTextView.setText(mMovie.getOriginalTitle());
-        overviewTextView.setText(mMovie.getOverview());
-        voteAverageTextView.setText(mMovie.getVoteAverage().toString());
-        releaseDateTextView.setText(mMovie.getReleaseDate());
+        originalTitleTextView.setText(movie.getOriginalTitle());
+        overviewTextView.setText(movie.getOverview());
+        voteAverageTextView.setText(movie.getVoteAverage().toString());
+        releaseDateTextView.setText(movie.getReleaseDate());
     }
 
     private void closeOnError() {

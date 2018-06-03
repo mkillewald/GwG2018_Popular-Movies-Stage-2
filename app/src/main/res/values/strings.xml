@@ -4,6 +4,9 @@
     <!-- Main Activity-->
     <string name="main_error_message">An error has occurred.</string>
 
+    <!-- Main Activity Action Bar-->
+    <string name="action_bar_spinner">ActionBar Spinner</string>
+
     <!-- Detail Activity-->
     <string name="detail_error_message">Movie data not available</string>
     <string name="detail_original_title">Original Title: </string>
