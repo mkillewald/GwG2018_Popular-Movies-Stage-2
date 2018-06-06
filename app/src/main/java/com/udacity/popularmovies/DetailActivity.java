@@ -1,31 +1,28 @@
 package com.udacity.popularmovies;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
+
 
 public class DetailActivity extends AppCompatActivity {
 
     private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
+    ActivityDetailBinding mBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
 
-        ImageView moviePosterImageView = findViewById(R.id.iv_movie_poster);
-        ImageView backdropImageView = findViewById(R.id.iv_backdrop);
-        TextView originalTitleTextView = findViewById(R.id.tv_movie_original_title);
-        TextView overviewTextView = findViewById(R.id.tv_movie_overview);
-        TextView voteAverageTextView = findViewById(R.id.tv_movie_vote_average);
-        TextView releaseDateTextView = findViewById(R.id.tv_movie_release_date);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         Intent intent = getIntent();
 
@@ -51,17 +48,17 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(movie.getPosterUrl())
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(moviePosterImageView);
+                .into(mBinding.ivMoviePoster);
 
         Picasso.with(this)
                 .load(movie.getBackdropUrl())
                 .placeholder(R.drawable.ic_launcher_background)
-                .into(backdropImageView);
+                .into(mBinding.ivBackdrop);
 
-        originalTitleTextView.setText(movie.getOriginalTitle());
-        overviewTextView.setText(movie.getOverview());
-        voteAverageTextView.setText(movie.getVoteAverage().toString());
-        releaseDateTextView.setText(movie.getReleaseDate());
+        mBinding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
+        mBinding.tvMovieOverview.setText(movie.getOverview());
+        mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
+        mBinding.tvMovieReleaseDate.setText(movie.getReleaseDate());
     }
 
     private void closeOnError() {

@@ -2,20 +2,19 @@ package com.udacity.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.JsonUtils;
 import com.udacity.popularmovies.utilities.TmdbUtils;
@@ -29,30 +28,25 @@ public class MainActivity extends AppCompatActivity
     private final static int NUM_OF_COLUMNS = 3;
     private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
+    ActivityMainBinding mBinding;
+
     private MovieAdapter mMovieAdapter;
-    private RecyclerView mRecyclerView;
-    private TextView mErrorMessage;
-    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.rv_movies);
-
-        mErrorMessage = findViewById(R.id.tv_error_message);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUM_OF_COLUMNS,
                 GridLayoutManager.VERTICAL, false);
 
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
+        mBinding.rvMovies.setLayoutManager(gridLayoutManager);
+        mBinding.rvMovies.setHasFixedSize(true);
 
         mMovieAdapter = new MovieAdapter(this);
-        mRecyclerView.setAdapter(mMovieAdapter);
+        mBinding.rvMovies.setAdapter(mMovieAdapter);
 
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
     }
 
     @Override
@@ -80,13 +74,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showMovieDataView() {
-        mErrorMessage.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
+        mBinding.rvMovies.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorMessage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessage.setVisibility(View.VISIBLE);
+    private void showErrorMessage(int message_id) {
+        mBinding.rvMovies.setVisibility(View.INVISIBLE);
+        mBinding.tvErrorMessage.setText(message_id);
+        mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -109,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                 loadTopRatedData();
                 break;
             default:
-                showErrorMessage();
+                showErrorMessage(R.string.main_error_message);
                 break;
         }
 
@@ -125,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -142,13 +137,13 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String tmdbResults) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
             if (tmdbResults != null && !tmdbResults.equals("")) {
                 showMovieDataView();
                 Movie[] movies = JsonUtils.parseTmdbJson(tmdbResults);
                 mMovieAdapter.setMovieData(movies);
             } else {
-                showErrorMessage();
+                showErrorMessage(R.string.main_network_error);
             }
         }
     }

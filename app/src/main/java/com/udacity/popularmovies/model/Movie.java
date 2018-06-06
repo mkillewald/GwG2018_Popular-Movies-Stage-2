@@ -1,11 +1,13 @@
 package com.udacity.popularmovies.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.udacity.popularmovies.utilities.TmdbUtils;
 
-public class Movie implements Parcelable {
+public class Movie extends BaseObservable implements Parcelable {
 
     // Set the desired image widths here (w92, w154, w185, w342, w500 or w780).
     private final static String POSTER_WIDTH = "w342";
@@ -61,6 +63,7 @@ public class Movie implements Parcelable {
         }
     };
 
+    @Bindable
     public String getTitle() {
         return title;
     }
@@ -69,6 +72,7 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
+    @Bindable
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -83,6 +87,7 @@ public class Movie implements Parcelable {
 
     public void setBackdropPath(String backdropPath) { this.backdropPath = backdropPath; }
 
+    @Bindable
     public String getOverview() {
         return overview;
     }
@@ -91,6 +96,7 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
+    @Bindable
     public Double getVoteAverage() {
         return voteAverage;
     }
@@ -99,6 +105,7 @@ public class Movie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
+    @Bindable
     public String getReleaseDate() {
         return releaseDate;
     }

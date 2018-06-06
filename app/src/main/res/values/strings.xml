@@ -3,6 +3,7 @@
 
     <!-- Main Activity-->
     <string name="main_error_message">An error has occurred.</string>
+    <string name="main_network_error">Network is not responding.</string>
 
     <!-- Main Activity Action Bar-->
     <string name="action_bar_spinner">ActionBar Spinner</string>

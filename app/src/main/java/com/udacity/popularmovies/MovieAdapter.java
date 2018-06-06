@@ -1,13 +1,13 @@
 package com.udacity.popularmovies;
 
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.databinding.MovieListItemBinding;
 import com.udacity.popularmovies.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterImageViewHolder> {
@@ -25,13 +25,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public class MovieAdapterImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMovieImageView;
+        public MovieListItemBinding mMovieListItemBinding;
 
-        public MovieAdapterImageViewHolder(View itemView) {
-            super(itemView);
+        public MovieAdapterImageViewHolder(MovieListItemBinding movieListItemBinding) {
+            super(movieListItemBinding.getRoot());
+            mMovieListItemBinding = movieListItemBinding;
 
-            mMovieImageView = itemView.findViewById(R.id.iv_item_movie_poster);
-            mMovieImageView.setOnClickListener(this);
+            mMovieListItemBinding.ivItemMoviePoster.setOnClickListener(this);
         }
 
         @Override
@@ -44,12 +44,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapterImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.movie_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+        MovieListItemBinding binding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.getContext()),
+            R.layout.movie_list_item, parent, false);
 
-        View view = inflater.inflate(layoutIdForListItem, parent, false);
-        MovieAdapterImageViewHolder viewHolder = new MovieAdapterImageViewHolder(view);
+        MovieAdapterImageViewHolder viewHolder = new MovieAdapterImageViewHolder(binding);
 
         return viewHolder;
     }
@@ -58,10 +57,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterImageViewHolder holder, int position) {
         Movie movie = mMovies[position];
 
+        holder.mMovieListItemBinding.setMovie(movie);
+
         Picasso.with(holder.itemView.getContext())
                 .load(movie.getPosterUrl())
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(holder.mMovieImageView);
+                .into(holder.mMovieListItemBinding.ivItemMoviePoster);
     }
 
     @Override
