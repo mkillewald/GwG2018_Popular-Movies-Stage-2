@@ -13,6 +13,7 @@ public class Movie extends BaseObservable implements Parcelable {
     private final static String POSTER_WIDTH = "w342";
     private final static String BACKDROP_WIDTH = "w500";
 
+    private Double id;
     private String title;
     private String originalTitle;
     private String posterPath;
@@ -25,6 +26,7 @@ public class Movie extends BaseObservable implements Parcelable {
     }
 
     private Movie(Parcel source) {
+        this.id = source.readDouble();
         this.title = source.readString();
         this.originalTitle = source.readString();
         this.posterPath = source.readString();
@@ -41,6 +43,7 @@ public class Movie extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(id);
         dest.writeString(title);
         dest.writeString(originalTitle);
         dest.writeString(posterPath);
@@ -62,6 +65,14 @@ public class Movie extends BaseObservable implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public Double getId() {
+        return id;
+    }
+
+    public void setId(Double id) {
+        this.id = id;
+    }
 
     @Bindable
     public String getTitle() {

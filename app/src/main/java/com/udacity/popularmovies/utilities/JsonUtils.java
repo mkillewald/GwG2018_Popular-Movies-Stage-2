@@ -17,6 +17,7 @@ public class JsonUtils {
     public static Movie[] parseTmdbJson(String json) {
 
         final String KEY_RESULTS = "results";
+        final String KEY_ID = "id";
         final String KEY_TITLE = "title";
         final String KEY_ORIGINAL_TITLE = "original_title";
         final String KEY_POSTER_PATH = "poster_path";
@@ -38,6 +39,7 @@ public class JsonUtils {
 
                 JSONObject movieJson = results.getJSONObject(i);
 
+                movie.setId(movieJson.getDouble(KEY_ID));
                 movie.setTitle(movieJson.getString(KEY_TITLE));
                 movie.setOriginalTitle(movieJson.getString(KEY_ORIGINAL_TITLE));
                 movie.setPosterPath(movieJson.getString(KEY_POSTER_PATH));

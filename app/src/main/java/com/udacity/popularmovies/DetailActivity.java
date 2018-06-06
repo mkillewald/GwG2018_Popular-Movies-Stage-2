@@ -55,8 +55,8 @@ public class DetailActivity extends AppCompatActivity {
 
         binding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
         binding.tvMovieOverview.setText(movie.getOverview());
-        binding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
-        binding.tvMovieReleaseDate.setText(movie.getReleaseDate());
+        binding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString() + "/10");
+        binding.tvMovieReleaseDate.setText(movie.getReleaseDate().substring(0,4));
     }
 
     private void closeOnError() {
