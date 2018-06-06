@@ -72,14 +72,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadPopularData() {
-        showMovieDataView();
-
         new tmdbQueryTask().execute(TmdbUtils.popularURL());
     }
 
     private void loadTopRatedData() {
-        showMovieDataView();
-
         new tmdbQueryTask().execute(TmdbUtils.topRatedUrl());
     }
 
