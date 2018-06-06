@@ -16,13 +16,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
-    ActivityDetailBinding mBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         Intent intent = getIntent();
 
@@ -48,17 +46,17 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(movie.getPosterUrl())
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(mBinding.ivMoviePoster);
+                .into(binding.ivMoviePoster);
 
         Picasso.with(this)
                 .load(movie.getBackdropUrl())
                 .placeholder(R.drawable.ic_launcher_background)
-                .into(mBinding.ivBackdrop);
+                .into(binding.ivBackdrop);
 
-        mBinding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
-        mBinding.tvMovieOverview.setText(movie.getOverview());
-        mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
-        mBinding.tvMovieReleaseDate.setText(movie.getReleaseDate());
+        binding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
+        binding.tvMovieOverview.setText(movie.getOverview());
+        binding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
+        binding.tvMovieReleaseDate.setText(movie.getReleaseDate());
     }
 
     private void closeOnError() {

@@ -1,17 +1,21 @@
 <resources>
     <string name="app_name">Top 20 Movies</string>
 
-    <!-- Main Activity-->
+    <!-- Main Activity -->
     <string name="main_error_message">An error has occurred.</string>
     <string name="main_network_error">Network is not responding.</string>
 
-    <!-- Main Activity Action Bar-->
+    <!-- Main Activity Action Bar -->
     <string name="action_bar_spinner">ActionBar Spinner</string>
 
-    <!-- Detail Activity-->
+    <!-- Detail Activity -->
     <string name="detail_error_message">Movie data not available</string>
     <string name="detail_original_title">Original Title: </string>
     <string name="detail_overview">Plot: </string>
     <string name="detail_vote_average">User Rating: </string>
     <string name="detail_release_date">Release Date: </string>
+
+    <!-- Content Description -->
+    <string name="content_description_backdrop">movie backdrop image</string>
+    <string name="content_description_poster">movie poster image</string>
 </resources>

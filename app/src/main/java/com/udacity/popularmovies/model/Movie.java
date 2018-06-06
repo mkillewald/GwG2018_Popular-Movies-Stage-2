@@ -24,7 +24,7 @@ public class Movie extends BaseObservable implements Parcelable {
     public Movie() {
     }
 
-    public Movie(Parcel source) {
+    private Movie(Parcel source) {
         this.title = source.readString();
         this.originalTitle = source.readString();
         this.posterPath = source.readString();

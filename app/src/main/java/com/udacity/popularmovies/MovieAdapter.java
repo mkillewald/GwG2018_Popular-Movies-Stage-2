@@ -25,9 +25,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public class MovieAdapterImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public MovieListItemBinding mMovieListItemBinding;
+        final MovieListItemBinding mMovieListItemBinding;
 
-        public MovieAdapterImageViewHolder(MovieListItemBinding movieListItemBinding) {
+        MovieAdapterImageViewHolder(MovieListItemBinding movieListItemBinding) {
             super(movieListItemBinding.getRoot());
             mMovieListItemBinding = movieListItemBinding;
 

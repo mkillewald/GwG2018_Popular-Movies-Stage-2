@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
     private final static int NUM_OF_COLUMNS = 3;
     private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
 
-    ActivityMainBinding mBinding;
+    private ActivityMainBinding mBinding;
 
     private MovieAdapter mMovieAdapter;
 
@@ -66,11 +66,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadPopularData() {
-        new tmdbQueryTask().execute(TmdbUtils.popularURL());
+        new TmdbQueryTask().execute(TmdbUtils.popularURL());
     }
 
     private void loadTopRatedData() {
-        new tmdbQueryTask().execute(TmdbUtils.topRatedUrl());
+        new TmdbQueryTask().execute(TmdbUtils.topRatedUrl());
     }
 
     private void showMovieDataView() {
@@ -115,11 +115,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public class tmdbQueryTask extends AsyncTask<URL, Void, String> {
+    class TmdbQueryTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
             mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
