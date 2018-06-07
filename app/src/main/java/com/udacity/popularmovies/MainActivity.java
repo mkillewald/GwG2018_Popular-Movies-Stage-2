@@ -16,11 +16,12 @@ import android.widget.Spinner;
 
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Movie;
-import com.udacity.popularmovies.utilities.JsonUtils;
-import com.udacity.popularmovies.utilities.TmdbUtils;
+import com.udacity.popularmovies.utilities.TmdbMoviesJson;
+import com.udacity.popularmovies.utilities.TmdbApiUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements MovieAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
@@ -66,11 +67,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadPopularData() {
-        new TmdbQueryTask().execute(TmdbUtils.popularURL());
+        new TmdbQueryTask().execute(TmdbApiUtils.popularURL());
     }
 
     private void loadTopRatedData() {
-        new TmdbQueryTask().execute(TmdbUtils.topRatedUrl());
+        new TmdbQueryTask().execute(TmdbApiUtils.topRatedUrl());
     }
 
     private void showMovieDataView() {
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity
             URL tmdbUrl = params[0];
             String tmdbResults = null;
             try {
-                tmdbResults = TmdbUtils.getResponseFromHttpUrl(tmdbUrl);
+                tmdbResults = TmdbApiUtils.getResponseFromHttpUrl(tmdbUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -141,7 +142,8 @@ public class MainActivity extends AppCompatActivity
             mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
             if (tmdbResults != null && !tmdbResults.equals("")) {
                 showMovieDataView();
-                Movie[] movies = JsonUtils.parseTmdbJson(tmdbResults);
+
+                List<Movie> movies = TmdbMoviesJson.parseJSON(tmdbResults);
                 mMovieAdapter.setMovieData(movies);
             } else {
                 showErrorMessage(R.string.main_network_error);

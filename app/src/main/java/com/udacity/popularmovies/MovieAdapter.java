@@ -10,9 +10,10 @@ import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.databinding.MovieListItemBinding;
 import com.udacity.popularmovies.model.Movie;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterImageViewHolder> {
+import java.util.List;
 
-    private Movie[] mMovies;
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterImageViewHolder> {
+    private List<Movie> mMovies;
 
     private final MovieAdapterOnClickHandler mClickHandler;
 
@@ -37,8 +38,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            Movie movie = mMovies[adapterPosition];
+            Movie movie = mMovies.get(adapterPosition);
             mClickHandler.onClick(movie);
+
         }
     }
 
@@ -55,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterImageViewHolder holder, int position) {
-        Movie movie = mMovies[position];
+        Movie movie = mMovies.get(position);
 
         holder.mMovieListItemBinding.setMovie(movie);
 
@@ -68,10 +70,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public int getItemCount() {
         if (mMovies == null) return 0;
-        return mMovies.length;
+
+        return mMovies.size();
     }
 
-    public void setMovieData(Movie[] movies) {
+    public void setMovieData(List<Movie> movies) {
         mMovies = movies;
         notifyDataSetChanged();
     }

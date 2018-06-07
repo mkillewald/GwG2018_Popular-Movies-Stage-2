@@ -71,8 +71,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:paddingRight="@dimen/detail_padding"
             android:paddingBottom="@dimen/detail_padding"
             app:layout_constraintLeft_toRightOf="@id/tv_movie_release_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
+
+        <TextView
+            android:text="120 Minutes"
+            android:id="@+id/tv_runtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/detail_padding"
+            app:layout_constraintLeft_toRightOf="@id/tv_movie_vote_average"
             app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
 
         <TextView
@@ -89,6 +100,11 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_movie_release_date" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </android.support.constraint.ConstraintLayout>
 
