@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         implements MovieAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
     private final static int NUM_OF_COLUMNS = 3;
-    private final static String EXTRA_MOVIE = "com.udacity.popularmovies.model.Movie";
+    private final static String EXTRA_MOVIE_ID = "movie id";
 
     private ActivityMainBinding mBinding;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadPopularData() {
         try {
-            run(TmdbApiUtils.popularUrl());
+            fetchMovieList(TmdbApiUtils.popularUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadTopRatedData() {
         try {
-            run(TmdbApiUtils.topRatedUrl());
+            fetchMovieList(TmdbApiUtils.topRatedUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
 
-        intentToStartDetailActivity.putExtra(EXTRA_MOVIE, movie);
+        intentToStartDetailActivity.putExtra(EXTRA_MOVIE_ID, movie.getId());
         startActivity(intentToStartDetailActivity);
     }
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    void run(URL url) throws IOException {
+    void fetchMovieList(URL url) throws IOException {
 
         showLoadingIndicator();
 
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
                         if (tmdbResults != null && !tmdbResults.equals("")) {
                             showMovieDataView();
 
-                            List<Movie> movies = TmdbMovieListJson.parseJSON(tmdbResults);
+                            List<Movie> movies = TmdbMovieListJson.parse(tmdbResults);
                             mMovieAdapter.setMovieData(movies);
                         }
                     }

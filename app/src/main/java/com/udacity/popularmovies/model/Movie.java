@@ -2,18 +2,17 @@ package com.udacity.popularmovies.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 
-public class Movie extends BaseObservable implements Parcelable {
+public class Movie extends BaseObservable {
 
     // Set the desired image widths here (w92, w154, w185, w342, w500 or w780).
     private final static String POSTER_WIDTH = "w342";
     private final static String BACKDROP_WIDTH = "w500";
 
     private int id;
+    private int runtime;
     private String title;
     private String original_title;
     private String poster_path;
@@ -22,49 +21,9 @@ public class Movie extends BaseObservable implements Parcelable {
     private String release_date;
     private String backdrop_path;
 
+
     public Movie() {
     }
-
-    private Movie(Parcel source) {
-        this.id = source.readInt();
-        this.title = source.readString();
-        this.original_title = source.readString();
-        this.poster_path = source.readString();
-        this.overview = source.readString();
-        this.vote_average = source.readDouble();
-        this.release_date = source.readString();
-        this.backdrop_path = source.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(original_title);
-        dest.writeString(poster_path);
-        dest.writeString(overview);
-        dest.writeDouble(vote_average);
-        dest.writeString(release_date);
-        dest.writeString(backdrop_path);
-    }
-
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-
-        @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -72,6 +31,15 @@ public class Movie extends BaseObservable implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Bindable
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
     }
 
     @Bindable

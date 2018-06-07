@@ -13,13 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TmdbMovieListJson {
-    List<Movie> results;
+    List<Movie> movies;
 
     public TmdbMovieListJson() {
-        results = new ArrayList<Movie>();
+        movies = new ArrayList<>();
     }
 
-    public static List<Movie> parseJSON(String json) {
+    public static List<Movie> parse(String json) {
         final String KEY_RESULTS = "results";
 
         Gson gson = new GsonBuilder().create();
