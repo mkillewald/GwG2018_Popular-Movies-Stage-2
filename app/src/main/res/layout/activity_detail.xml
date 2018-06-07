@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:background="@android:color/black"
+            android:background="@color/colorPrimary"
             app:layout_constraintLeft_toLeftOf="@id/tv_movie_original_title"
             app:layout_constraintTop_toBottomOf="@id/iv_backdrop"
             app:layout_constraintBottom_toTopOf="@id/iv_backdrop"
@@ -60,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             android:paddingRight="@dimen/detail_padding"
             android:paddingBottom="@dimen/detail_padding"
             app:layout_constraintLeft_toLeftOf="@id/tv_movie_original_title"
@@ -71,20 +72,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:paddingRight="@dimen/detail_padding"
+            android:textColor="@android:color/white"
+            android:paddingRight="2dp"
             android:paddingBottom="@dimen/detail_padding"
             app:layout_constraintLeft_toRightOf="@id/tv_movie_release_date"
             app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
 
         <TextView
-            android:text="120 Minutes"
-            android:id="@+id/tv_runtime"
+            android:id="@+id/tv_movie_vote_average_by10"
+            android:text="@string/detail_vote_average_by10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:paddingRight="@dimen/detail_padding"
             android:paddingBottom="@dimen/detail_padding"
             app:layout_constraintLeft_toRightOf="@id/tv_movie_vote_average"
             app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
+
+        <TextView
+            android:text="120"
+            android:id="@+id/tv_movie_runtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:paddingRight="6dp"
+            android:paddingBottom="@dimen/detail_padding"
+            app:layout_constraintLeft_toRightOf="@id/tv_movie_vote_average_by10"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
+
+        <TextView
+            android:id="@+id/tv_movie_runtime_minutes"
+            android:text="@string/detail_runtime_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingRight="@dimen/detail_padding"
+            android:paddingBottom="@dimen/detail_padding"
+            app:layout_constraintLeft_toRightOf="@id/tv_movie_runtime"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_original_title" />
+
 
         <TextView
             android:id="@+id/tv_movie_overview"

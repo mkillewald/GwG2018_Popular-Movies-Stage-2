@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TmdbMoviesJson {
+public class TmdbMovieListJson {
     List<Movie> results;
 
-    public TmdbMoviesJson() {
+    public TmdbMovieListJson() {
         results = new ArrayList<Movie>();
     }
 

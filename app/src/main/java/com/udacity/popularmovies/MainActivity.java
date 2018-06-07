@@ -3,7 +3,6 @@ package com.udacity.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,12 +15,18 @@ import android.widget.Spinner;
 
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Movie;
-import com.udacity.popularmovies.utilities.TmdbMoviesJson;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
+import com.udacity.popularmovies.utilities.TmdbMovieListJson;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity
         implements MovieAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
@@ -67,22 +72,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadPopularData() {
-        new TmdbQueryTask().execute(TmdbApiUtils.popularURL());
+        try {
+            run(TmdbApiUtils.popularUrl());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadTopRatedData() {
-        new TmdbQueryTask().execute(TmdbApiUtils.topRatedUrl());
+        try {
+            run(TmdbApiUtils.topRatedUrl());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showMovieDataView() {
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.rvMovies.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage(int message_id) {
         mBinding.rvMovies.setVisibility(View.INVISIBLE);
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.tvErrorMessage.setText(message_id);
         mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoadingIndicator() {
+        mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
+        mBinding.rvMovies.setVisibility(View.INVISIBLE);
+        mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -116,38 +137,47 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    class TmdbQueryTask extends AsyncTask<URL, Void, String> {
+    void run(URL url) throws IOException {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
-            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
-        }
+        showLoadingIndicator();
 
-        @Override
-        protected String doInBackground(URL... params) {
-            URL tmdbUrl = params[0];
-            String tmdbResults = null;
-            try {
-                tmdbResults = TmdbApiUtils.getResponseFromHttpUrl(tmdbUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorMessage(R.string.main_network_error);
+                    }
+                });
             }
-            return tmdbResults;
-        }
 
-        @Override
-        protected void onPostExecute(String tmdbResults) {
-            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (tmdbResults != null && !tmdbResults.equals("")) {
-                showMovieDataView();
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
 
-                List<Movie> movies = TmdbMoviesJson.parseJSON(tmdbResults);
-                mMovieAdapter.setMovieData(movies);
-            } else {
-                showErrorMessage(R.string.main_network_error);
+                final String tmdbResults = response.body().string();
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (tmdbResults != null && !tmdbResults.equals("")) {
+                            showMovieDataView();
+
+                            List<Movie> movies = TmdbMovieListJson.parseJSON(tmdbResults);
+                            mMovieAdapter.setMovieData(movies);
+                        }
+                    }
+                });
+
             }
-        }
+        });
     }
 }
