@@ -37,17 +37,9 @@ public class Movie extends BaseObservable {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
-        this.runtime = runtime;
-    }
-
     @Bindable
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Bindable
@@ -55,23 +47,9 @@ public class Movie extends BaseObservable {
         return original_title;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.original_title = originalTitle;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.poster_path = posterPath;
-    }
-
-    public void setBackdropPath(String backdropPath) { this.backdrop_path = backdropPath; }
-
     @Bindable
     public String getTagline() {
         return tagline;
-    }
-
-    public void setTagline(String tagline) {
-        this.tagline = tagline;
     }
 
     @Bindable
@@ -79,26 +57,14 @@ public class Movie extends BaseObservable {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
     @Bindable
     public Double getVoteAverage() {
         return vote_average;
     }
 
-    public void setVoteAverage(Double voteAverage) {
-        this.vote_average = voteAverage;
-    }
-
     @Bindable
     public String getReleaseDate() {
         return release_date;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.release_date = releaseDate;
     }
 
     public String getPosterUrl() {

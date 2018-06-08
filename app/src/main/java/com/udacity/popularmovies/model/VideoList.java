@@ -10,9 +10,6 @@ public class VideoList {
         return results;
     }
 
-    public void setResults(List<Video> results) {
-        this.results = results;
-    }
 }
 
 

@@ -1,10 +1,13 @@
 package com.udacity.popularmovies;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,18 +30,28 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity
+        implements VideoAdapter.VideoAdapterOnClickHandler {
 
     private final static String EXTRA_MOVIE_ID = "movie id";
 
     private int mId;
     private ActivityDetailBinding mBinding;
+    private VideoAdapter mVideoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        mBinding.rvMovieTrailers.setLayoutManager(linearLayoutManager);
+        mBinding.rvMovieTrailers.setHasFixedSize(true);
+
+        mVideoAdapter = new VideoAdapter(this);
+        mBinding.rvMovieTrailers.setAdapter(mVideoAdapter);
 
         Intent intent = getIntent();
 
@@ -90,6 +103,22 @@ public class DetailActivity extends AppCompatActivity {
         mBinding.tvDetailErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.svDetailMovie.setVisibility(View.INVISIBLE);
         mBinding.pbDetailLoadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(Video video) {
+        Context context = this;
+
+        String id = video.getKey();
+
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
     }
 
     void fetchMovie(URL url) throws IOException {
@@ -151,11 +180,8 @@ public class DetailActivity extends AppCompatActivity {
                             }
                             mBinding.tvMovieOverview.setText(movie.getOverview());
 
-                            List<Video> myList = movie.getVideos().getResults();
-
-                            for (int i = 0; i < myList.size(); i++) {
-                                Log.d("DEBUG: ", myList.get(i).getName());
-                            }
+                            List<Video> videoList = movie.getVideos().getResults();
+                            mVideoAdapter.setVideoData(videoList);
                         }
                     }
                 });
