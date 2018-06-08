@@ -2,7 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="movie" type="com.udacity.popularmovies.model.Movie" />
+        <variable name="poster" type="com.udacity.popularmovies.model.Poster" />
     </data>
 <LinearLayout
     android:layout_width="match_parent"

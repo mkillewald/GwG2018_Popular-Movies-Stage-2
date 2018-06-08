@@ -139,10 +139,17 @@ public class DetailActivity extends AppCompatActivity {
                                     .into(mBinding.ivBackdrop);
 
                             mBinding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
-                            mBinding.tvMovieOverview.setText(movie.getOverview());
-                            mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
                             mBinding.tvMovieReleaseDate.setText(movie.getReleaseDate().substring(0,4));
+                            mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
                             mBinding.tvMovieRuntime.setText(Integer.toString(movie.getRuntime()));
+
+                            if (movie.getTagline().equals("")) {
+                                mBinding.tvMovieTagline.setHeight(0);
+                                mBinding.tvMovieTagline.setPadding(0,0,0,0);
+                            } else {
+                                mBinding.tvMovieTagline.setText(movie.getTagline());
+                            }
+                            mBinding.tvMovieOverview.setText(movie.getOverview());
 
                             List<Video> myList = movie.getVideos().getResults();
 

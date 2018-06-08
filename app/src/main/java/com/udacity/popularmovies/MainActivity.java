@@ -14,9 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
-import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Poster;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
-import com.udacity.popularmovies.utilities.TmdbMovieListJson;
+import com.udacity.popularmovies.utilities.TmdbPosterListJson;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,14 +29,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements MovieAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
+        implements PosterAdapter.PosterAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
     private final static int NUM_OF_COLUMNS = 3;
     private final static String EXTRA_MOVIE_ID = "movie id";
 
     private ActivityMainBinding mBinding;
 
-    private MovieAdapter mMovieAdapter;
+    private PosterAdapter mPosterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUM_OF_COLUMNS,
                 GridLayoutManager.VERTICAL, false);
 
-        mBinding.rvMovies.setLayoutManager(gridLayoutManager);
-        mBinding.rvMovies.setHasFixedSize(true);
+        mBinding.rvPosters.setLayoutManager(gridLayoutManager);
+        mBinding.rvPosters.setHasFixedSize(true);
 
-        mMovieAdapter = new MovieAdapter(this);
-        mBinding.rvMovies.setAdapter(mMovieAdapter);
+        mPosterAdapter = new PosterAdapter(this);
+        mBinding.rvPosters.setAdapter(mPosterAdapter);
 
     }
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadPopularData() {
         try {
-            fetchMovieList(TmdbApiUtils.popularUrl());
+            fetchPosterList(TmdbApiUtils.popularUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,20 +81,20 @@ public class MainActivity extends AppCompatActivity
 
     private void loadTopRatedData() {
         try {
-            fetchMovieList(TmdbApiUtils.topRatedUrl());
+            fetchPosterList(TmdbApiUtils.topRatedUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void showMovieDataView() {
+    private void showPosterDataView() {
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-        mBinding.rvMovies.setVisibility(View.VISIBLE);
+        mBinding.rvPosters.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage(int message_id) {
-        mBinding.rvMovies.setVisibility(View.INVISIBLE);
+        mBinding.rvPosters.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.tvErrorMessage.setText(message_id);
         mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
@@ -102,17 +102,17 @@ public class MainActivity extends AppCompatActivity
 
     private void showLoadingIndicator() {
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
-        mBinding.rvMovies.setVisibility(View.INVISIBLE);
+        mBinding.rvPosters.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onClick(Movie movie) {
+    public void onClick(Poster poster) {
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
 
-        intentToStartDetailActivity.putExtra(EXTRA_MOVIE_ID, movie.getId());
+        intentToStartDetailActivity.putExtra(EXTRA_MOVIE_ID, poster.getId());
         startActivity(intentToStartDetailActivity);
     }
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    void fetchMovieList(URL url) throws IOException {
+    void fetchPosterList(URL url) throws IOException {
 
         showLoadingIndicator();
 
@@ -169,10 +169,10 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         if (tmdbResults != null && !tmdbResults.equals("")) {
-                            showMovieDataView();
+                            showPosterDataView();
 
-                            List<Movie> movies = TmdbMovieListJson.parse(tmdbResults);
-                            mMovieAdapter.setMovieData(movies);
+                            List<Poster> posters = TmdbPosterListJson.parse(tmdbResults);
+                            mPosterAdapter.setPosterData(posters);
                         }
                     }
                 });

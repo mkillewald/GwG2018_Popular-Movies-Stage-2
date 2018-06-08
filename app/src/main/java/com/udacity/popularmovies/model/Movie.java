@@ -20,11 +20,9 @@ public class Movie extends BaseObservable {
     private Double vote_average;
     private String release_date;
     private String backdrop_path;
+    private String tagline;
     private Boolean video;
     private VideoList videos;
-
-    public Movie() {
-    }
 
     public int getId() {
         return id;
@@ -66,6 +64,15 @@ public class Movie extends BaseObservable {
     }
 
     public void setBackdropPath(String backdropPath) { this.backdrop_path = backdropPath; }
+
+    @Bindable
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
+    }
 
     @Bindable
     public String getOverview() {
