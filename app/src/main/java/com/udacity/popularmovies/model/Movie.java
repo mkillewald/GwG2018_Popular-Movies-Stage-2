@@ -20,7 +20,8 @@ public class Movie extends BaseObservable {
     private Double vote_average;
     private String release_date;
     private String backdrop_path;
-
+    private Boolean video;
+    private VideoList videos;
 
     public Movie() {
     }
@@ -101,4 +102,19 @@ public class Movie extends BaseObservable {
         return TmdbApiUtils.buildImageUrl(BACKDROP_WIDTH, backdrop_path).toString();
     }
 
+    public Boolean getVideo() {
+        return video;
+    }
+
+    public void setVideo(Boolean video) {
+        this.video = video;
+    }
+
+    public VideoList getVideos() {
+        return videos;
+    }
+
+    public void setVideos(VideoList videos) {
+        this.videos = videos;
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,11 +12,13 @@ import com.squareup.picasso.Picasso;
 
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Video;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 import com.udacity.popularmovies.utilities.TmdbMovieJson;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -140,6 +143,12 @@ public class DetailActivity extends AppCompatActivity {
                             mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
                             mBinding.tvMovieReleaseDate.setText(movie.getReleaseDate().substring(0,4));
                             mBinding.tvMovieRuntime.setText(Integer.toString(movie.getRuntime()));
+
+                            List<Video> myList = movie.getVideos().getResults();
+
+                            for (int i = 0; i < myList.size(); i++) {
+                                Log.d("DEBUG: ", myList.get(i).getName());
+                            }
                         }
                     }
                 });

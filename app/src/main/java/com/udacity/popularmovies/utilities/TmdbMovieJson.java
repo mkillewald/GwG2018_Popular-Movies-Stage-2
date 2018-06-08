@@ -11,7 +11,6 @@ public class TmdbMovieJson {
     }
 
     public static Movie parse(String json) {
-
         Gson gson = new Gson();
 
         return gson.fromJson(json, Movie.class);
