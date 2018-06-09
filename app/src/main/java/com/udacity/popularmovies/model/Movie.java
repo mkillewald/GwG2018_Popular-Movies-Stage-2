@@ -23,6 +23,7 @@ public class Movie extends BaseObservable {
     private String tagline;
     private Boolean video;
     private VideoList videos;
+    private ReviewList reviews;
 
     public int getId() {
         return id;
@@ -89,5 +90,13 @@ public class Movie extends BaseObservable {
 
     public void setVideos(VideoList videos) {
         this.videos = videos;
+    }
+
+    public ReviewList getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ReviewList reviews) {
+        this.reviews = reviews;
     }
 }

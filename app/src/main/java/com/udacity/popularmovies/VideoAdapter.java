@@ -33,6 +33,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoAdapter
             mVideoListItemBinding = videoListItemBinding;
 
             mVideoListItemBinding.tvItemVideoName.setOnClickListener(this);
+            mVideoListItemBinding.ivItemPlayButton.setOnClickListener(this);
         }
 
         @Override

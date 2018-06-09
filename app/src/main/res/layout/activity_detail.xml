@@ -148,19 +148,26 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_movie_tagline" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_movie_trailers"
+                    android:id="@+id/rv_movie_videos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/detail_padding"
-                    android:paddingStart="@dimen/detail_padding"
-                    android:paddingRight="@dimen/detail_padding"
-                    android:paddingEnd="@dimen/detail_padding"
                     android:paddingBottom="@dimen/detail_padding"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_movie_overview" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movie_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/detail_padding"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_movie_videos" />
 
             </android.support.constraint.ConstraintLayout>
 

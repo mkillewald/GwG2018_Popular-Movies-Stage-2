@@ -47,11 +47,11 @@ public class DetailActivity extends AppCompatActivity
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        mBinding.rvMovieTrailers.setLayoutManager(linearLayoutManager);
-        mBinding.rvMovieTrailers.setHasFixedSize(true);
+        mBinding.rvMovieVideos.setLayoutManager(linearLayoutManager);
+        mBinding.rvMovieVideos.setHasFixedSize(true);
 
         mVideoAdapter = new VideoAdapter(this);
-        mBinding.rvMovieTrailers.setAdapter(mVideoAdapter);
+        mBinding.rvMovieVideos.setAdapter(mVideoAdapter);
 
         Intent intent = getIntent();
 
