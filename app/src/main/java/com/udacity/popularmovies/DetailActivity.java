@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 import com.udacity.popularmovies.utilities.TmdbMovieJson;
@@ -31,13 +32,14 @@ import okhttp3.Response;
 
 
 public class DetailActivity extends AppCompatActivity
-        implements VideoAdapter.VideoAdapterOnClickHandler {
+        implements VideoAdapter.VideoAdapterOnClickHandler,
+        ReviewAdapter.ReviewAdapterOnClickHandler {
 
     private final static String EXTRA_MOVIE_ID = "movie id";
 
-    private int mId;
     private ActivityDetailBinding mBinding;
     private VideoAdapter mVideoAdapter;
+    private ReviewAdapter mReviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +47,19 @@ public class DetailActivity extends AppCompatActivity
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-
-        mBinding.rvMovieVideos.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager videoLinearLayoutManager = new LinearLayoutManager(this);
+        mBinding.rvMovieVideos.setLayoutManager(videoLinearLayoutManager);
         mBinding.rvMovieVideos.setHasFixedSize(true);
 
         mVideoAdapter = new VideoAdapter(this);
         mBinding.rvMovieVideos.setAdapter(mVideoAdapter);
+
+        LinearLayoutManager reviewLinearLayoutManager = new LinearLayoutManager(this);
+        mBinding.rvMovieReviews.setLayoutManager(reviewLinearLayoutManager);
+        mBinding.rvMovieReviews.setHasFixedSize(true);
+
+        mReviewAdapter = new ReviewAdapter(this);
+        mBinding.rvMovieReviews.setAdapter(mReviewAdapter);
 
         Intent intent = getIntent();
 
@@ -67,15 +75,15 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        mId = bundle.getInt(EXTRA_MOVIE_ID);
+        int id = bundle.getInt(EXTRA_MOVIE_ID);
 
-        if (mId == 0) {
+        if (id == 0) {
             closeOnError();
             return;
         }
 
         try {
-            fetchMovie(TmdbApiUtils.buildMovieUrl(mId));
+            fetchMovie(TmdbApiUtils.buildMovieUrl(id));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,6 +127,16 @@ public class DetailActivity extends AppCompatActivity
         } catch (ActivityNotFoundException ex) {
             context.startActivity(webIntent);
         }
+    }
+
+    @Override
+    public void onClick(Review review) {
+        Context context = this;
+
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(review.getUrl()));
+
+        context.startActivity(webIntent);
     }
 
     void fetchMovie(URL url) throws IOException {
@@ -182,6 +200,9 @@ public class DetailActivity extends AppCompatActivity
 
                             List<Video> videoList = movie.getVideos().getResults();
                             mVideoAdapter.setVideoData(videoList);
+
+                            List<Review> reviewList = movie.getReviews().getResults();
+                            mReviewAdapter.setReviewData(reviewList);
                         }
                     }
                 });

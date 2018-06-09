@@ -1,0 +1,32 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="review" type="com.udacity.popularmovies.model.Review" />
+    </data>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/detail_padding"
+        android:paddingStart="@dimen/detail_padding"
+        android:paddingRight="@dimen/detail_padding"
+        android:paddingEnd="@dimen/detail_padding">
+
+        <TextView
+            android:id="@+id/tv_item_review_author"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_item_review_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/detail_padding"
+            android:paddingStart="@dimen/detail_padding"
+            android:paddingBottom="@dimen/rv_item_padding"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_review_author"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -12,6 +12,8 @@
     <string name="detail_error_message">Movie data not available</string>
     <string name="detail_vote_average_by10">/10</string>
     <string name="detail_runtime_minutes">Minutes</string>
+    <string name="detail_content_ellipsis">…</string>
+    <string name="detail_content_more">(read more)</string>
 
     <!-- Content Description -->
     <string name="content_description_backdrop">movie backdrop image</string>
