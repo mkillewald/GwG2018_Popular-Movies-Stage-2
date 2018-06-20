@@ -1,12 +1,8 @@
 package com.udacity.popularmovies.model;
 
-<<<<<<< HEAD
-import android.arch.persistence.room.Entity;
-import android.databinding.BaseObservable;
-=======
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
+
 
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 
@@ -38,58 +34,31 @@ public class Movie extends BaseObservable {
         this.id = id;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public int getRuntime() {
         return runtime;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
+
     public String getTitle() {
         return title;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public String getOriginalTitle() {
         return original_title;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public String getTagline() {
         return tagline;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public String getOverview() {
         return overview;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public Double getVoteAverage() {
         return vote_average;
     }
 
-<<<<<<< HEAD
-=======
-    @Bindable
->>>>>>> 91339113839686a9f428fb819f02618632aeb897
     public String getReleaseDate() {
         return release_date;
     }
