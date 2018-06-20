@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdapterImageViewHolder> {
 
-    private final static int REVIEW_PREVIEW_LENGTH = 200;
+    private final static int PREVIEW_LENGTH = 200;
 
     private List<Review> mReviews;
 
@@ -72,14 +72,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
         String content = review.getContent();
 
-        if (content.length() > REVIEW_PREVIEW_LENGTH) {
+        if (content.length() > PREVIEW_LENGTH) {
             Resources resources = holder.itemView.getResources();
             Context context = holder.itemView.getContext();
 
-            content = content.substring(0, REVIEW_PREVIEW_LENGTH);
+            content = content.substring(0, PREVIEW_LENGTH);
 
             SpannableString more = new SpannableString(resources
                     .getString(R.string.detail_content_more));
+
             more.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context,
                     R.color.colorPrimary)), 0, more.length(), 0);
 

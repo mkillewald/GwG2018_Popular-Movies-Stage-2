@@ -1,7 +1,7 @@
 package com.udacity.popularmovies.model;
 
+import android.arch.persistence.room.Entity;
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 
@@ -33,37 +33,30 @@ public class Movie extends BaseObservable {
         this.id = id;
     }
 
-    @Bindable
     public int getRuntime() {
         return runtime;
     }
 
-    @Bindable
     public String getTitle() {
         return title;
     }
 
-    @Bindable
     public String getOriginalTitle() {
         return original_title;
     }
 
-    @Bindable
     public String getTagline() {
         return tagline;
     }
 
-    @Bindable
     public String getOverview() {
         return overview;
     }
 
-    @Bindable
     public Double getVoteAverage() {
         return vote_average;
     }
 
-    @Bindable
     public String getReleaseDate() {
         return release_date;
     }
