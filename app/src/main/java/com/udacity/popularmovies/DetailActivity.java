@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import com.udacity.popularmovies.database.AppDatabase;
+import com.udacity.popularmovies.database.Favorite;
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;
+import com.udacity.popularmovies.utilities.AppExecutors;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 import com.udacity.popularmovies.utilities.TmdbMovieJson;
 
@@ -40,16 +44,22 @@ public class DetailActivity extends AppCompatActivity
     private ActivityDetailBinding mBinding;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
+    private Movie mMovie;
+    private AppDatabase mDb;
+    private boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         LinearLayoutManager videoLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.rvMovieVideos.setLayoutManager(videoLinearLayoutManager);
         mBinding.rvMovieVideos.setHasFixedSize(true);
+        mBinding.rvMovieVideos.setNestedScrollingEnabled(false);
 
         mVideoAdapter = new VideoAdapter(this);
         mBinding.rvMovieVideos.setAdapter(mVideoAdapter);
@@ -57,6 +67,7 @@ public class DetailActivity extends AppCompatActivity
         LinearLayoutManager reviewLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.rvMovieReviews.setLayoutManager(reviewLinearLayoutManager);
         mBinding.rvMovieReviews.setHasFixedSize(true);
+        mBinding.rvMovieReviews.setNestedScrollingEnabled(false);
 
         mReviewAdapter = new ReviewAdapter(this);
         mBinding.rvMovieReviews.setAdapter(mReviewAdapter);
@@ -75,7 +86,7 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        int id = bundle.getInt(EXTRA_MOVIE_ID);
+        final int id = bundle.getInt(EXTRA_MOVIE_ID);
 
         if (id == 0) {
             closeOnError();
@@ -87,6 +98,30 @@ public class DetailActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Favorite favorite = mDb.favoriteDao().loadFavoriteById(id);
+                if ( favorite != null) {
+                    isFavorited = true;
+                    mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                            android.R.drawable.btn_star_big_on));
+                }
+            }
+        });
+
+//        LiveData<Favorite> favorite = mDb.favoriteDao().loadFavoriteById(id);
+//        favorite.observe(this, new Observer<Favorite>() {
+//            @Override
+//            public void onChanged(@Nullable Favorite favorite) {
+//                if ( favorite != null) {
+//                    isFavorited = true;
+//                    mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+//                            android.R.drawable.btn_star_big_on));
+//                }
+//            }
+//        });
     }
 
     private void closeOnError() {
@@ -139,6 +174,36 @@ public class DetailActivity extends AppCompatActivity
         context.startActivity(webIntent);
     }
 
+    public void onToggleFavorite(View view) {
+        isFavorited = !isFavorited;
+        if (isFavorited) {
+            mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                    android.R.drawable.btn_star_big_on));
+
+            // add favorite
+            final Favorite favorite = new Favorite(mMovie.getId(), mMovie.getTitle(), mMovie.getPosterPath());
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.favoriteDao().insertFavorite(favorite);
+                }
+            });
+
+        } else {
+            mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                    android.R.drawable.btn_star_big_off));
+
+            // delete favorite
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Favorite favorite = mDb.favoriteDao().loadFavoriteById(mMovie.getId());
+                    mDb.favoriteDao().deleteFavorite(favorite);
+                }
+            });
+        }
+    }
+
     void fetchMovie(URL url) throws IOException {
 
         showLoadingIndicator();
@@ -173,35 +238,35 @@ public class DetailActivity extends AppCompatActivity
                         if (tmdbResults != null && !tmdbResults.equals("")) {
                             showMovieDataView();
 
-                            Movie movie = TmdbMovieJson.parse(tmdbResults);
+                            mMovie = TmdbMovieJson.parse(tmdbResults);
 
                             Picasso.with(DetailActivity.this)
-                                    .load(movie.getPosterUrl())
+                                    .load(mMovie.getPosterUrl())
                                     .placeholder(R.drawable.ic_launcher_foreground)
                                     .into(mBinding.ivMoviePoster);
 
                             Picasso.with(DetailActivity.this)
-                                    .load(movie.getBackdropUrl())
+                                    .load(mMovie.getBackdropUrl())
                                     .placeholder(R.drawable.ic_launcher_background)
                                     .into(mBinding.ivBackdrop);
 
-                            mBinding.tvMovieOriginalTitle.setText(movie.getOriginalTitle());
-                            mBinding.tvMovieReleaseDate.setText(movie.getReleaseDate().substring(0,4));
-                            mBinding.tvMovieVoteAverage.setText(movie.getVoteAverage().toString());
-                            mBinding.tvMovieRuntime.setText(Integer.toString(movie.getRuntime()));
+                            mBinding.tvMovieOriginalTitle.setText(mMovie.getOriginalTitle());
+                            mBinding.tvMovieReleaseDate.setText(mMovie.getReleaseDate().substring(0,4));
+                            mBinding.tvMovieVoteAverage.setText(mMovie.getVoteAverage().toString());
+                            mBinding.tvMovieRuntime.setText(Integer.toString(mMovie.getRuntime()));
 
-                            if (movie.getTagline().equals("")) {
+                            if (mMovie.getTagline().equals("")) {
                                 mBinding.tvMovieTagline.setHeight(0);
                                 mBinding.tvMovieTagline.setPadding(0,0,0,0);
                             } else {
-                                mBinding.tvMovieTagline.setText(movie.getTagline());
+                                mBinding.tvMovieTagline.setText(mMovie.getTagline());
                             }
-                            mBinding.tvMovieOverview.setText(movie.getOverview());
+                            mBinding.tvMovieOverview.setText(mMovie.getOverview());
 
-                            List<Video> videoList = movie.getVideos().getResults();
+                            List<Video> videoList = mMovie.getVideos().getResults();
                             mVideoAdapter.setVideoData(videoList);
 
-                            List<Review> reviewList = movie.getReviews().getResults();
+                            List<Review> reviewList = mMovie.getReviews().getResults();
                             mReviewAdapter.setReviewData(reviewList);
                         }
                     }

@@ -1,8 +1,11 @@
 package com.udacity.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.udacity.popularmovies.database.AppDatabase;
+import com.udacity.popularmovies.database.Favorite;
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Poster;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
@@ -20,6 +25,7 @@ import com.udacity.popularmovies.utilities.TmdbPosterListJson;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -35,12 +41,14 @@ public class MainActivity extends AppCompatActivity
     private final static String EXTRA_MOVIE_ID = "movie id";
 
     private ActivityMainBinding mBinding;
-
     private PosterAdapter mPosterAdapter;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -87,6 +95,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void loadFavoriteData() {
+        LiveData<List<Favorite>> favorites = mDb.favoriteDao().loadAllFavorites();
+        favorites.observe(this, new Observer<List<Favorite>>() {
+            @Override
+            public void onChanged(@Nullable List<Favorite> favorites) {
+
+                List<Poster> posters = new ArrayList<>();
+
+                for (Favorite favorite : favorites) {
+                    Poster poster = new Poster(favorite.getId(), favorite.getPosterPath());
+                    posters.add(poster);
+                }
+
+                if (posters.isEmpty()) {
+                    showErrorMessage(R.string.main_favorites_empty);
+                } else {
+                    mPosterAdapter.setPosterData(posters);
+                    showPosterDataView();
+                }
+            }
+        });
+    }
+
     private void showPosterDataView() {
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
@@ -124,6 +155,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 1:
                 loadTopRatedData();
+                break;
+            case 2:
+                loadFavoriteData();
                 break;
             default:
                 showErrorMessage(R.string.main_error_message);

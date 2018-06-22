@@ -4,6 +4,7 @@
     <!-- Main Activity -->
     <string name="main_error_message">An error has occurred.</string>
     <string name="main_network_error">Network is not responding.</string>
+    <string name="main_favorites_empty">No Favorites to display.</string>
 
     <!-- Main Activity Action Bar -->
     <string name="action_bar_spinner">ActionBar Spinner</string>
@@ -18,4 +19,5 @@
     <!-- Content Description -->
     <string name="content_description_backdrop">movie backdrop image</string>
     <string name="content_description_poster">movie poster image</string>
+    <string name="content_description_favorite_button">favorite button</string>
 </resources>

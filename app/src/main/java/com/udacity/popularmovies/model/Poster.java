@@ -10,6 +10,11 @@ public class Poster {
     private int id;
     private String poster_path;
 
+    public Poster(int id, String poster_path) {
+        this.id = id;
+        this.poster_path = poster_path;
+    }
+
     public int getId() {
         return id;
     }

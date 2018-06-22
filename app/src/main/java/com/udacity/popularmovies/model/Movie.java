@@ -47,9 +47,7 @@ public class Movie extends BaseObservable {
         return original_title;
     }
 
-    public String getTagline() {
-        return tagline;
-    }
+    public String getPosterPath() { return poster_path; }
 
     public String getOverview() {
         return overview;
@@ -61,6 +59,10 @@ public class Movie extends BaseObservable {
 
     public String getReleaseDate() {
         return release_date;
+    }
+
+    public String getTagline() {
+        return tagline;
     }
 
     public String getPosterUrl() {
