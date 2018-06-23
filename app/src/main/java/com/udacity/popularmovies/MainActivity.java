@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.udacity.popularmovies.database.AppDatabase;
-import com.udacity.popularmovies.database.Favorite;
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Poster;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
@@ -25,7 +24,6 @@ import com.udacity.popularmovies.utilities.TmdbPosterListJson;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -38,11 +36,15 @@ public class MainActivity extends AppCompatActivity
         implements PosterAdapter.PosterAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
     private final static int NUM_OF_COLUMNS = 3;
+
     private final static String EXTRA_MOVIE_ID = "movie id";
+    private final static String INSTANCE_SPINNER_POSITION = "instanceMenuPosition";
 
     private ActivityMainBinding mBinding;
     private PosterAdapter mPosterAdapter;
     private AppDatabase mDb;
+
+    private int mSpinnerPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,18 @@ public class MainActivity extends AppCompatActivity
 
         mPosterAdapter = new PosterAdapter(this);
         mBinding.rvPosters.setAdapter(mPosterAdapter);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INSTANCE_SPINNER_POSITION, mSpinnerPosition);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSpinnerPosition = savedInstanceState.getInt(INSTANCE_SPINNER_POSITION);
     }
 
     @Override
@@ -68,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.action_bar_spinner_menu, menu);
 
         MenuItem item = menu.findItem(R.id.spinner);
+
         Spinner spinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -76,6 +90,7 @@ public class MainActivity extends AppCompatActivity
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(mSpinnerPosition);
         return true;
     }
 
@@ -96,22 +111,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadFavoriteData() {
-        LiveData<List<Favorite>> favorites = mDb.favoriteDao().loadAllFavorites();
-        favorites.observe(this, new Observer<List<Favorite>>() {
+        LiveData<List<Poster>> favorites = mDb.favoriteDao().loadAllFavorites();
+        favorites.observe(this, new Observer<List<Poster>>() {
             @Override
-            public void onChanged(@Nullable List<Favorite> favorites) {
+            public void onChanged(@Nullable List<Poster> favorites) {
 
-                List<Poster> posters = new ArrayList<>();
-
-                for (Favorite favorite : favorites) {
-                    Poster poster = new Poster(favorite.getId(), favorite.getPosterPath());
-                    posters.add(poster);
-                }
-
-                if (posters.isEmpty()) {
+                if (favorites.isEmpty()) {
                     showErrorMessage(R.string.main_favorites_empty);
                 } else {
-                    mPosterAdapter.setPosterData(posters);
+                    mPosterAdapter.setPosterData(favorites);
+                    mPosterAdapter.notifyDataSetChanged();
                     showPosterDataView();
                 }
             }
@@ -149,6 +158,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mSpinnerPosition = position;
         switch(position) {
             case 0:
                 loadPopularData();
@@ -207,6 +217,7 @@ public class MainActivity extends AppCompatActivity
 
                             List<Poster> posters = TmdbPosterListJson.parse(tmdbResults);
                             mPosterAdapter.setPosterData(posters);
+                            mPosterAdapter.notifyDataSetChanged();
                         }
                     }
                 });

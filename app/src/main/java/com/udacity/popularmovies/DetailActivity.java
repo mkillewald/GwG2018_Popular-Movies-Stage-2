@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import com.udacity.popularmovies.database.AppDatabase;
-import com.udacity.popularmovies.database.Favorite;
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Poster;
 import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;
 import com.udacity.popularmovies.utilities.AppExecutors;
@@ -102,7 +102,7 @@ public class DetailActivity extends AppCompatActivity
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Favorite favorite = mDb.favoriteDao().loadFavoriteById(id);
+                Poster favorite = mDb.favoriteDao().loadFavoriteById(id);
                 if ( favorite != null) {
                     isFavorited = true;
                     mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
@@ -181,7 +181,7 @@ public class DetailActivity extends AppCompatActivity
                     android.R.drawable.btn_star_big_on));
 
             // add favorite
-            final Favorite favorite = new Favorite(mMovie.getId(), mMovie.getTitle(), mMovie.getPosterPath());
+            final Poster favorite = new Poster(mMovie.getId(), mMovie.getTitle(), mMovie.getPosterPath());
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -197,7 +197,7 @@ public class DetailActivity extends AppCompatActivity
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Favorite favorite = mDb.favoriteDao().loadFavoriteById(mMovie.getId());
+                    Poster favorite = mDb.favoriteDao().loadFavoriteById(mMovie.getId());
                     mDb.favoriteDao().deleteFavorite(favorite);
                 }
             });
