@@ -23,6 +23,5 @@ public interface FavoriteDao {
     void deleteFavorite(Poster favorite);
 
     @Query("SELECT * FROM favorite WHERE id = :id")
-    Poster loadFavoriteById(int id);
-//    LiveData<Poster> loadFavoriteById(int id);
+    LiveData<Poster> loadFavoriteById(int id);
 }

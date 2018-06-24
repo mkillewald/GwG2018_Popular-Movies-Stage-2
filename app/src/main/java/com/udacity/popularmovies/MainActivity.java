@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActivityMainBinding mBinding;
     private PosterAdapter mPosterAdapter;
     private AppDatabase mDb;
-    private Parcelable mGridLayoutState;
+    private Parcelable mGridLayoutSavedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements
 
         outState.putInt(SPINNER_POSITION, mSpinnerPosition);
 
-        mGridLayoutState = mBinding.rvPosters.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(GRID_LAYOUT_STATE, mGridLayoutState);
+        mGridLayoutSavedState = mBinding.rvPosters.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(GRID_LAYOUT_STATE, mGridLayoutSavedState);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onRestoreInstanceState(savedInstanceState);
 
         mSpinnerPosition = savedInstanceState.getInt(SPINNER_POSITION);
-        mGridLayoutState = savedInstanceState.getParcelable(GRID_LAYOUT_STATE);
+        mGridLayoutSavedState = savedInstanceState.getParcelable(GRID_LAYOUT_STATE);
     }
 
     @Override
@@ -144,9 +144,10 @@ public class MainActivity extends AppCompatActivity implements
                     mPosterAdapter.setPosterData(favorites);
                     mPosterAdapter.notifyDataSetChanged();
 
-                    if (mGridLayoutState != null) {
+                    if (mGridLayoutSavedState != null) {
                         mBinding.rvPosters.getLayoutManager()
-                                .onRestoreInstanceState(mGridLayoutState);
+                                .onRestoreInstanceState(mGridLayoutSavedState);
+                        mGridLayoutSavedState = null;
                     }
 
                     showPosterDataView();
@@ -209,6 +210,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mSpinnerPosition = position;
+        if (mGridLayoutSavedState == null) {
+            mBinding.rvPosters.getLayoutManager().scrollToPosition(0);
+        }
         loadData(position);
     }
 
@@ -253,9 +257,10 @@ public class MainActivity extends AppCompatActivity implements
                             mPosterAdapter.setPosterData(posters);
                             mPosterAdapter.notifyDataSetChanged();
 
-                            if (mGridLayoutState != null) {
+                            if (mGridLayoutSavedState != null) {
                                 mBinding.rvPosters.getLayoutManager()
-                                        .onRestoreInstanceState(mGridLayoutState);
+                                        .onRestoreInstanceState(mGridLayoutSavedState);
+                                mGridLayoutSavedState = null;
                             }
 
                             showPosterDataView();
