@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +92,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
             holder.mReviewListItemBinding.tvItemReviewContent
                     .setText(builder, TextView.BufferType.SPANNABLE);
-            
+
 
         } else {
             holder.mReviewListItemBinding.tvItemReviewContent.setText(content);

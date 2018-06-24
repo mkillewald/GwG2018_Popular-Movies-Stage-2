@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,19 +33,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity
-        implements PosterAdapter.PosterAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        PosterAdapter.PosterAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
     private final static int NUM_OF_COLUMNS = 3;
-
     private final static String EXTRA_MOVIE_ID = "movieId";
-    private final static String SPINNER_POSITION = "spinnerPosition";
+    private final static String SPINNER_POSITION = "mainSpinnerPosition";
+    private final static String GRID_LAYOUT_STATE = "mainGridLayoutState";
+
+    private int mSpinnerPosition;
+    private boolean mDataLoading;
 
     private ActivityMainBinding mBinding;
     private PosterAdapter mPosterAdapter;
     private AppDatabase mDb;
-
-    private int mSpinnerPosition;
+    private Parcelable mGridLayoutState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,34 +70,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putInt(SPINNER_POSITION, mSpinnerPosition);
+
+        mGridLayoutState = mBinding.rvPosters.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(GRID_LAYOUT_STATE, mGridLayoutState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
         mSpinnerPosition = savedInstanceState.getInt(SPINNER_POSITION);
+        mGridLayoutState = savedInstanceState.getParcelable(GRID_LAYOUT_STATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        switch(mSpinnerPosition) {
-            case 0:
-                loadPopularData();
-                break;
-            case 1:
-                loadTopRatedData();
-                break;
-            case 2:
-                loadFavoriteData();
-                break;
-            default:
-                showErrorMessage(R.string.main_error_message);
-                break;
-        }
-
+        loadData(mSpinnerPosition);
     }
 
     @Override
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(mSpinnerPosition);
+
         return true;
     }
 
@@ -142,19 +143,46 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     mPosterAdapter.setPosterData(favorites);
                     mPosterAdapter.notifyDataSetChanged();
+
+                    if (mGridLayoutState != null) {
+                        mBinding.rvPosters.getLayoutManager()
+                                .onRestoreInstanceState(mGridLayoutState);
+                    }
+
                     showPosterDataView();
                 }
             }
         });
     }
 
+    private void loadData(int position) {
+        if (!mDataLoading) {
+            switch (position) {
+                case 0:
+                    loadPopularData();
+                    break;
+                case 1:
+                    loadTopRatedData();
+                    break;
+                case 2:
+                    loadFavoriteData();
+                    break;
+                default:
+                    showErrorMessage(R.string.main_error_message);
+                    break;
+            }
+        }
+    }
+
     private void showPosterDataView() {
+        mDataLoading = false;
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.rvPosters.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage(int message_id) {
+        mDataLoading = false;
         mBinding.rvPosters.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         mBinding.tvErrorMessage.setText(message_id);
@@ -162,6 +190,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showLoadingIndicator() {
+        mDataLoading = true;
         mBinding.tvErrorMessage.setVisibility(View.INVISIBLE);
         mBinding.rvPosters.setVisibility(View.INVISIBLE);
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
@@ -180,26 +209,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mSpinnerPosition = position;
-        switch(position) {
-            case 0:
-                loadPopularData();
-                break;
-            case 1:
-                loadTopRatedData();
-                break;
-            case 2:
-                loadFavoriteData();
-                break;
-            default:
-                showErrorMessage(R.string.main_error_message);
-                break;
-        }
-
+        loadData(position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     void fetchPosterList(URL url) throws IOException {
@@ -234,11 +248,18 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         if (tmdbResults != null && !tmdbResults.equals("")) {
-                            showPosterDataView();
 
                             List<Poster> posters = TmdbPosterListJson.parse(tmdbResults);
                             mPosterAdapter.setPosterData(posters);
                             mPosterAdapter.notifyDataSetChanged();
+
+                            if (mGridLayoutState != null) {
+                                mBinding.rvPosters.getLayoutManager()
+                                        .onRestoreInstanceState(mGridLayoutState);
+                            }
+
+                            showPosterDataView();
+
                         }
                     }
                 });

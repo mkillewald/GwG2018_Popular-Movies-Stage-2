@@ -16,7 +16,7 @@ public class ReviewActivity extends AppCompatActivity {
     private final static String EXTRA_REVIEW = "com.udacity.popularmovies.model.Review";
     private final static String EXTRA_POSTER_URL = "extraPosterUrl";
     private final static String EXTRA_BACKDROP_URL = "extraBackdropUrl";
-    private final static String SCROLL_POSITION = "scrollPosition";
+    private final static String SCROLL_POSITION = "reviewScrollPosition";
 
     private ActivityReviewBinding mBinding;
 

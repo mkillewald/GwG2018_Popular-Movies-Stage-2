@@ -1,20 +1,14 @@
 package com.udacity.popularmovies;
 
-import android.app.Activity;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,15 +43,16 @@ public class DetailActivity extends AppCompatActivity
     private final static String EXTRA_REVIEW = "com.udacity.popularmovies.model.Review";
     private final static String EXTRA_POSTER_URL = "extraPosterUrl";
     private final static String EXTRA_BACKDROP_URL = "extraBackdropUrl";
-    private final static String SCROLL_POSITION = "scrollPosition";
+    private final static String SCROLL_POSITION = "detailScrollPosition";
 
+    private int mId;
+    private boolean isFavorited = false;
+
+    private Movie mMovie;
+    private AppDatabase mDb;
     private ActivityDetailBinding mBinding;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
-    private int mId;
-    private Movie mMovie;
-    private AppDatabase mDb;
-    private boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +150,7 @@ public class DetailActivity extends AppCompatActivity
                 public void run() {
                     mBinding.svDetailMovie.scrollTo(scrollPosition[0], scrollPosition[1]);
                 }
-            }, 300);
+            }, 500);
         }
     }
 
