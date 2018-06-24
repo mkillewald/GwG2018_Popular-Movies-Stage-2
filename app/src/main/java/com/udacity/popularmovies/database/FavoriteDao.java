@@ -17,12 +17,12 @@ public interface FavoriteDao {
     LiveData<List<Poster>> loadAllFavorites();
 
     @Insert
-    void insertFavorite(Poster poster);
+    void insertFavorite(Poster favorite);
 
     @Delete
-    void deleteFavorite(Poster poster);
+    void deleteFavorite(Poster favorite);
 
     @Query("SELECT * FROM favorite WHERE id = :id")
-//    LiveData<Poster> loadFavoriteById(int id);
     Poster loadFavoriteById(int id);
+//    LiveData<Poster> loadFavoriteById(int id);
 }

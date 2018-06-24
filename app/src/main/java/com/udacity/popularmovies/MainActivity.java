@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity
 
     private final static int NUM_OF_COLUMNS = 3;
 
-    private final static String EXTRA_MOVIE_ID = "movie id";
-    private final static String INSTANCE_SPINNER_POSITION = "instanceMenuPosition";
+    private final static String EXTRA_MOVIE_ID = "movieId";
+    private final static String SPINNER_POSITION = "spinnerPosition";
 
     private ActivityMainBinding mBinding;
     private PosterAdapter mPosterAdapter;
@@ -67,13 +67,34 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(INSTANCE_SPINNER_POSITION, mSpinnerPosition);
+        outState.putInt(SPINNER_POSITION, mSpinnerPosition);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mSpinnerPosition = savedInstanceState.getInt(INSTANCE_SPINNER_POSITION);
+        mSpinnerPosition = savedInstanceState.getInt(SPINNER_POSITION);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        switch(mSpinnerPosition) {
+            case 0:
+                loadPopularData();
+                break;
+            case 1:
+                loadTopRatedData();
+                break;
+            case 2:
+                loadFavoriteData();
+                break;
+            default:
+                showErrorMessage(R.string.main_error_message);
+                break;
+        }
+
     }
 
     @Override

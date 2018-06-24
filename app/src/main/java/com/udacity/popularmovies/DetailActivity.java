@@ -1,14 +1,20 @@
 package com.udacity.popularmovies;
 
+import android.app.Activity;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,11 +45,16 @@ public class DetailActivity extends AppCompatActivity
         implements VideoAdapter.VideoAdapterOnClickHandler,
         ReviewAdapter.ReviewAdapterOnClickHandler {
 
-    private final static String EXTRA_MOVIE_ID = "movie id";
+    private final static String EXTRA_MOVIE_ID = "movieId";
+    private final static String EXTRA_REVIEW = "com.udacity.popularmovies.model.Review";
+    private final static String EXTRA_POSTER_URL = "extraPosterUrl";
+    private final static String EXTRA_BACKDROP_URL = "extraBackdropUrl";
+    private final static String SCROLL_POSITION = "scrollPosition";
 
     private ActivityDetailBinding mBinding;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
+    private int mId;
     private Movie mMovie;
     private AppDatabase mDb;
     private boolean isFavorited = false;
@@ -55,6 +66,8 @@ public class DetailActivity extends AppCompatActivity
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+
+        setTitle(R.string.detail_title);
 
         LinearLayoutManager videoLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.rvMovieVideos.setLayoutManager(videoLinearLayoutManager);
@@ -86,15 +99,15 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        final int id = bundle.getInt(EXTRA_MOVIE_ID);
+        mId = bundle.getInt(EXTRA_MOVIE_ID);
 
-        if (id == 0) {
+        if (mId == 0) {
             closeOnError();
             return;
         }
 
         try {
-            fetchMovie(TmdbApiUtils.buildMovieUrl(id));
+            fetchMovie(TmdbApiUtils.buildMovieUrl(mId));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,7 +115,7 @@ public class DetailActivity extends AppCompatActivity
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Poster favorite = mDb.favoriteDao().loadFavoriteById(id);
+                Poster favorite = mDb.favoriteDao().loadFavoriteById(mId);
                 if ( favorite != null) {
                     isFavorited = true;
                     mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
@@ -111,10 +124,10 @@ public class DetailActivity extends AppCompatActivity
             }
         });
 
-//        LiveData<Favorite> favorite = mDb.favoriteDao().loadFavoriteById(id);
-//        favorite.observe(this, new Observer<Favorite>() {
+//        LiveData<Poster> favorite = mDb.favoriteDao().loadFavoriteById(mId);
+//        favorite.observe(this, new Observer<Poster>() {
 //            @Override
-//            public void onChanged(@Nullable Favorite favorite) {
+//            public void onChanged(@Nullable Poster favorite) {
 //                if ( favorite != null) {
 //                    isFavorited = true;
 //                    mBinding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
@@ -122,6 +135,28 @@ public class DetailActivity extends AppCompatActivity
 //                }
 //            }
 //        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray(SCROLL_POSITION, new int[]{ mBinding.svDetailMovie.getScrollX(),
+                mBinding.svDetailMovie.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        final int[] scrollPosition = savedInstanceState.getIntArray(SCROLL_POSITION);
+
+        if(scrollPosition != null) {
+            mBinding.svDetailMovie.postDelayed(new Runnable() {
+                public void run() {
+                    mBinding.svDetailMovie.scrollTo(scrollPosition[0], scrollPosition[1]);
+                }
+            }, 300);
+        }
     }
 
     private void closeOnError() {
@@ -168,10 +203,18 @@ public class DetailActivity extends AppCompatActivity
     public void onClick(Review review) {
         Context context = this;
 
-        Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse(review.getUrl()));
+        Class destinationClass = ReviewActivity.class;
+        Intent intentToStartReviewActivity = new Intent(context, destinationClass);
 
-        context.startActivity(webIntent);
+        intentToStartReviewActivity.putExtra(EXTRA_REVIEW, review);
+        intentToStartReviewActivity.putExtra(EXTRA_POSTER_URL, mMovie.getPosterUrl());
+        intentToStartReviewActivity.putExtra(EXTRA_BACKDROP_URL, mMovie.getBackdropUrl());
+        startActivity(intentToStartReviewActivity);
+
+//        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+//                Uri.parse(review.getUrl()));
+//
+//        context.startActivity(webIntent);
     }
 
     public void onToggleFavorite(View view) {
@@ -197,10 +240,25 @@ public class DetailActivity extends AppCompatActivity
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Poster favorite = mDb.favoriteDao().loadFavoriteById(mMovie.getId());
+                    Poster favorite = mDb.favoriteDao().loadFavoriteById(mId);
                     mDb.favoriteDao().deleteFavorite(favorite);
                 }
             });
+
+//            LiveData<Poster> favorite = mDb.favoriteDao().loadFavoriteById(mId);
+//            favorite.observe(DetailActivity.this, new Observer<Poster>() {
+//                @Override
+//                public void onChanged(final @Nullable Poster favorite) {
+//                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // causes null reference crash
+//                            Log.e("DEBUG: ", favorite.getTitle());
+//                            mDb.favoriteDao().deleteFavorite(favorite);
+//                        }
+//                    });
+//                }
+//            });
         }
     }
 

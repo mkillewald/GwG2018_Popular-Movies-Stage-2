@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
     private final static int PREVIEW_LENGTH = 200;
 
     private List<Review> mReviews;
-
     private final ReviewAdapterOnClickHandler mClickHandler;
+    private int mExpandedPosition = -1;
 
     public interface ReviewAdapterOnClickHandler {
         void onClick(Review review);
@@ -92,6 +93,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
             holder.mReviewListItemBinding.tvItemReviewContent
                     .setText(builder, TextView.BufferType.SPANNABLE);
+            
+
         } else {
             holder.mReviewListItemBinding.tvItemReviewContent.setText(content);
         }

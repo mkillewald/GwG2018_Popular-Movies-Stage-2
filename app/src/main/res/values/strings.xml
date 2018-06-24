@@ -10,11 +10,16 @@
     <string name="action_bar_spinner">ActionBar Spinner</string>
 
     <!-- Detail Activity -->
+    <string name="detail_title">Movie Details</string>
     <string name="detail_error_message">Movie data not available</string>
     <string name="detail_vote_average_by10">/10</string>
     <string name="detail_runtime_minutes">Minutes</string>
     <string name="detail_content_ellipsis">…</string>
     <string name="detail_content_more">(read more)</string>
+
+    <!-- Review Activity -->
+    <string name="review_title">Review</string>
+    <string name="review_by">Author: </string>
 
     <!-- Content Description -->
     <string name="content_description_backdrop">movie backdrop image</string>
