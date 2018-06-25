@@ -1,8 +1,6 @@
 package com.udacity.popularmovies.model;
 
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-
 
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 
@@ -23,8 +21,6 @@ public class Movie extends BaseObservable {
     private String backdrop_path;
     private String tagline;
     private Boolean video;
-    private VideoList videos;
-    private ReviewList reviews;
 
     public int getId() {
         return id;
@@ -81,19 +77,4 @@ public class Movie extends BaseObservable {
         this.video = video;
     }
 
-    public VideoList getVideos() {
-        return videos;
-    }
-
-    public void setVideos(VideoList videos) {
-        this.videos = videos;
-    }
-
-    public ReviewList getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(ReviewList reviews) {
-        this.reviews = reviews;
-    }
 }

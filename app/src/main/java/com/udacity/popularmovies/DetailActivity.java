@@ -26,6 +26,8 @@ import com.udacity.popularmovies.model.Video;
 import com.udacity.popularmovies.utilities.AppExecutors;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
 import com.udacity.popularmovies.utilities.TmdbMovieJson;
+import com.udacity.popularmovies.utilities.TmdbReviewListJson;
+import com.udacity.popularmovies.utilities.TmdbVideoListJson;
 
 import java.io.IOException;
 import java.net.URL;
@@ -104,8 +106,12 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
+        showLoadingIndicator();
+
         try {
             fetchMovie(TmdbApiUtils.buildMovieUrl(mId));
+            fetchVideos(TmdbApiUtils.buildVideosUrl(mId));
+            fetchReviews(TmdbApiUtils.buildReviewsUrl(mId));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -230,8 +236,6 @@ public class DetailActivity extends AppCompatActivity
 
     void fetchMovie(URL url) throws IOException {
 
-        showLoadingIndicator();
-
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -286,11 +290,89 @@ public class DetailActivity extends AppCompatActivity
                                 mBinding.tvMovieTagline.setText(mMovie.getTagline());
                             }
                             mBinding.tvMovieOverview.setText(mMovie.getOverview());
+                        }
+                    }
+                });
 
-                            List<Video> videoList = mMovie.getVideos().getResults();
+            }
+        });
+    }
+
+    void fetchVideos(URL url) throws IOException {
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+
+                DetailActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorMessage(R.string.main_network_error);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String tmdbResults = response.body().string();
+
+                DetailActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (tmdbResults != null && !tmdbResults.equals("")) {
+                            showMovieDataView();
+
+                            List<Video> videoList = TmdbVideoListJson.parse(tmdbResults);
                             mVideoAdapter.setVideoData(videoList);
+                        }
+                    }
+                });
 
-                            List<Review> reviewList = mMovie.getReviews().getResults();
+            }
+        });
+    }
+
+    void fetchReviews(URL url) throws IOException {
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+
+                DetailActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showErrorMessage(R.string.main_network_error);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String tmdbResults = response.body().string();
+
+                DetailActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (tmdbResults != null && !tmdbResults.equals("")) {
+                            showMovieDataView();
+
+                            List<Review> reviewList = TmdbReviewListJson.parse(tmdbResults);
                             mReviewAdapter.setReviewData(reviewList);
                         }
                     }
