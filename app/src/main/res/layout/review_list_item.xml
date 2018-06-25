@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/detail_padding"
             android:paddingStart="@dimen/detail_padding"
+            android:paddingRight="@dimen/detail_padding"
+            android:paddingEnd="@dimen/detail_padding"
             android:paddingBottom="@dimen/rv_item_padding"
             app:layout_constraintTop_toBottomOf="@id/tv_item_review_author"
             app:layout_constraintLeft_toLeftOf="parent"

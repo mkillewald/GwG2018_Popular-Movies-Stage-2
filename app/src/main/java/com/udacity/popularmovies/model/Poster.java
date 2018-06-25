@@ -11,7 +11,7 @@ public class Poster {
     // Set the desired image width here (w92, w154, w185, w342, w500 or w780).
     private final static String POSTER_WIDTH = "w342";
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     private int id;
     private String title;
     private String poster_path;

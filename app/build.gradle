@@ -44,8 +44,8 @@ dependencies {
     // https://developer.android.com/topic/libraries/architecture/
 
     // Room
-    implementation "android.arch.persistence.room:runtime:1.1.0"
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     // Lifecycle ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.1"

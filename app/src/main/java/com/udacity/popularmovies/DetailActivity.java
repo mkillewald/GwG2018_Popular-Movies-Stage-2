@@ -50,7 +50,6 @@ public class DetailActivity extends AppCompatActivity
     private final static String EXTRA_BACKDROP_URL = "extraBackdropUrl";
     private final static String SCROLL_POSITION = "detailScrollPosition";
 
-    private int mId;
     private boolean isFavorited = false;
 
     private Movie mMovie;
@@ -99,9 +98,9 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        mId = bundle.getInt(EXTRA_MOVIE_ID);
+        int id = bundle.getInt(EXTRA_MOVIE_ID);
 
-        if (mId == 0) {
+        if (id == 0) {
             closeOnError();
             return;
         }
@@ -109,14 +108,14 @@ public class DetailActivity extends AppCompatActivity
         showLoadingIndicator();
 
         try {
-            fetchMovie(TmdbApiUtils.buildMovieUrl(mId));
-            fetchVideos(TmdbApiUtils.buildVideosUrl(mId));
-            fetchReviews(TmdbApiUtils.buildReviewsUrl(mId));
+            fetchMovie(TmdbApiUtils.buildMovieUrl(id));
+            fetchVideos(TmdbApiUtils.buildVideosUrl(id));
+            fetchReviews(TmdbApiUtils.buildReviewsUrl(id));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        LiveData<Poster> favorite = mDb.favoriteDao().loadFavoriteById(mId);
+        LiveData<Poster> favorite = mDb.favoriteDao().loadFavoriteById(id);
         favorite.observe(this, new Observer<Poster>() {
             @Override
             public void onChanged(@Nullable Poster favorite) {

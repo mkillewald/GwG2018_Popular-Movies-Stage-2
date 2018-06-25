@@ -1,7 +1,7 @@
 package com.udacity.popularmovies;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.udacity.popularmovies.database.AppDatabase;
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Poster;
 import com.udacity.popularmovies.utilities.TmdbApiUtils;
@@ -46,14 +45,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private ActivityMainBinding mBinding;
     private PosterAdapter mPosterAdapter;
-    private AppDatabase mDb;
     private Parcelable mGridLayoutSavedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mDb = AppDatabase.getInstance(getApplicationContext());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -83,11 +79,6 @@ public class MainActivity extends AppCompatActivity implements
 
         mSpinnerPosition = savedInstanceState.getInt(SPINNER_POSITION);
         mGridLayoutSavedState = savedInstanceState.getParcelable(GRID_LAYOUT_STATE);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -132,9 +123,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void loadFavoriteData() {
-        LiveData<List<Poster>> favorites = mDb.favoriteDao().loadAllFavorites();
-        favorites.observe(this, new Observer<List<Poster>>() {
+    private void setupFavoritesViewModel() {
+        FavoriteViewModel viewModel = ViewModelProviders.of(this)
+                .get(FavoriteViewModel.class);
+        viewModel.getFavorites().observe(this, new Observer<List<Poster>>() {
             @Override
             public void onChanged(@Nullable List<Poster> favorites) {
 
@@ -166,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
                     loadTopRatedData();
                     break;
                 case 2:
-                    loadFavoriteData();
+                    setupFavoritesViewModel();
                     break;
                 default:
                     showErrorMessage(R.string.main_error_message);
