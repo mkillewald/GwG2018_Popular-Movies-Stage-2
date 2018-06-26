@@ -69,9 +69,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterAdap
 
     @Override
     public int getItemCount() {
-        if (mPosters == null) return 0;
-
-        return mPosters.size();
+        return mPosters == null ? 0 : mPosters.size();
     }
 
     public void setPosterData(List<Poster> posters) {

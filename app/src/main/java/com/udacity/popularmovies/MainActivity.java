@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -35,7 +36,6 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements
         PosterAdapter.PosterAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
-    private final static int NUM_OF_COLUMNS = 3;
     private final static String EXTRA_MOVIE_ID = "movieId";
     private final static String SPINNER_POSITION = "mainSpinnerPosition";
     private final static String GRID_LAYOUT_STATE = "mainGridLayoutState";
@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUM_OF_COLUMNS,
+        int spanCount = getResources().getConfiguration()
+                .orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 3;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount,
                 GridLayoutManager.VERTICAL, false);
 
         mBinding.rvPosters.setLayoutManager(gridLayoutManager);
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        loadData(mSpinnerPosition);
+        loadDataFromUrl(mSpinnerPosition);
     }
 
     @Override
@@ -107,17 +109,9 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    private void loadPopularData() {
+    private void loadDataFromUrl(URL url) {
         try {
-            fetchPosterList(TmdbApiUtils.popularUrl());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadTopRatedData() {
-        try {
-            fetchPosterList(TmdbApiUtils.topRatedUrl());
+            fetchPosterList(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,14 +142,14 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void loadData(int position) {
+    private void loadDataFromUrl(int position) {
         if (!mDataLoading) {
             switch (position) {
                 case 0:
-                    loadPopularData();
+                    loadDataFromUrl(TmdbApiUtils.popularUrl());
                     break;
                 case 1:
-                    loadTopRatedData();
+                    loadDataFromUrl(TmdbApiUtils.topRatedUrl());
                     break;
                 case 2:
                     setupFavoritesViewModel();
@@ -205,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mGridLayoutSavedState == null) {
             mBinding.rvPosters.getLayoutManager().scrollToPosition(0);
         }
-        loadData(position);
+        loadDataFromUrl(position);
     }
 
     @Override
