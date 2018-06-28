@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        loadDataFromUrl(mSpinnerPosition);
+        loadData(mSpinnerPosition);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void loadDataFromUrl(int position) {
+    private void loadData(int position) {
         if (!mDataLoading) {
             switch (position) {
                 case 0:
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mGridLayoutSavedState == null) {
             mBinding.rvPosters.getLayoutManager().scrollToPosition(0);
         }
-        loadDataFromUrl(position);
+        loadData(position);
     }
 
     @Override
